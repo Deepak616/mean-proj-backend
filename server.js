@@ -1,8 +1,10 @@
 var express=require('express');
 var bodyParser=require('body-parser');
-var mongo=require('mongodb').MongoClient;
+var mongo=require('mongoose');
 var app=express();
-var database;
+var Message=mongo.model('messages',{
+    msg:String
+});
 app.use(bodyParser.json());
 
 app.use(function(req,res,next){
@@ -13,14 +15,22 @@ app.use(function(req,res,next){
 
 app.post('/api/postMessage',function(req,res){
     console.log(req.body);
-    database.collection('messages').insertOne(req.body);
+    var msg=new Message(req.body);
+    msg.save();
     res.status(200);
     res.end("success");
 });
 
+function getList(){
+ Message.find({}).exec(function(err,result){
+     console.log(result);
+});
+}
+
 mongo.connect("mongodb://localhost:27017/test",function(err,db){
     console.log('connected to mongo db');
-    database=db;
+    getList();
+    
 });
 
 var server=app.listen(5000,function(){
