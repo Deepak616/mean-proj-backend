@@ -13,6 +13,8 @@ app.use(function(req,res,next){
     next();
 });
 
+app.get('/api/getMessage',getList);
+
 app.post('/api/postMessage',function(req,res){
     console.log(req.body);
     var msg=new Message(req.body);
@@ -21,16 +23,15 @@ app.post('/api/postMessage',function(req,res){
     res.end("success");
 });
 
-function getList(){
+function getList(req,res){
  Message.find({}).exec(function(err,result){
-     console.log(result);
+    res.send(result);
 });
 }
 
 mongo.connect("mongodb://localhost:27017/test",function(err,db){
     console.log('connected to mongo db');
-    getList();
-    
+       
 });
 
 var server=app.listen(5000,function(){
