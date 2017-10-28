@@ -23,6 +23,10 @@ app.post('/api/postMessage',function(req,res){
     res.end("success");
 });
 
+app.post('/api/signup',function(req,res){
+    console.log(req.body);
+});
+
 function getList(req,res){
  Message.find({}).exec(function(err,result){
     res.send(result);
