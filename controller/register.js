@@ -1,7 +1,8 @@
 var User=require('../models/user');
 var jwt=require('jwt-simple');
 var moment=require('moment');
-module.exports=function(req,res){
+module.exports={
+    signup:function(req,res){
     var user=new User(req.body);
     User.find({email:req.body.email}).exec(function(err,result){
         console.log(result);
@@ -18,6 +19,25 @@ module.exports=function(req,res){
         }
     })
     
+},
+    login:function(req,res){
+     User.findOne({email:req.body.email}).exec(function(err,result){
+         if(err)
+             res.status(500).send({"message":"internal server error"})
+         else{
+             console.log(result);
+             if(!result){
+                 res.status(401).send({message:"no user found"})
+             }
+             else if(result.pwd!=req.body.pwd){
+                 res.status(401).send({message:"invalid password"})
+             }
+             else{
+                 res.status(200).send({token:generateJwtToken(result)})
+             }
+         }
+     })
+}
 }
 
 function generateJwtToken(user){

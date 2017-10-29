@@ -17,7 +17,9 @@ app.get('/api/getMessage',msg.get);
 
 app.post('/api/postMessage',authentication,msg.post);
 
-app.post('/api/signup',register);
+app.post('/api/signup',register.signup);
+
+app.post('/api/login',register.login);
 
 
 
