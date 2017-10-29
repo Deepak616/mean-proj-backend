@@ -1,10 +1,10 @@
 var express=require('express');
 var bodyParser=require('body-parser');
 var mongo=require('mongoose');
+var msg=require('./controller/message.controller');
+var register=require('./controller/register');
 var app=express();
-var Message=mongo.model('messages',{
-    msg:String
-});
+
 app.use(bodyParser.json());
 
 app.use(function(req,res,next){
@@ -13,25 +13,14 @@ app.use(function(req,res,next){
     next();
 });
 
-app.get('/api/getMessage',getList);
+app.get('/api/getMessage',msg.get);
 
-app.post('/api/postMessage',function(req,res){
-    console.log(req.body);
-    var msg=new Message(req.body);
-    msg.save();
-    res.status(200);
-    res.end("success");
-});
+app.post('/api/postMessage',msg.post);
 
-app.post('/api/signup',function(req,res){
-    console.log(req.body);
-});
+app.post('/api/signup',register);
 
-function getList(req,res){
- Message.find({}).exec(function(err,result){
-    res.send(result);
-});
-}
+
+
 
 mongo.connect("mongodb://localhost:27017/test",function(err,db){
     console.log('connected to mongo db');
