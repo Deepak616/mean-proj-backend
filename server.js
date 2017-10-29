@@ -3,19 +3,19 @@ var bodyParser=require('body-parser');
 var mongo=require('mongoose');
 var msg=require('./controller/message.controller');
 var register=require('./controller/register');
+var cors=require('./services/cors.service');
+var authentication=require('./services/checkAuthentication.service');
 var app=express();
 
 app.use(bodyParser.json());
 
-app.use(function(req,res,next){
-    res.header('Access-Control-Allow-Origin','*');
-    res.header('Access-Control-Allow-Headers','Content-Type,Authorization');
-    next();
-});
+app.use(cors);
+
+
 
 app.get('/api/getMessage',msg.get);
 
-app.post('/api/postMessage',msg.post);
+app.post('/api/postMessage',authentication,msg.post);
 
 app.post('/api/signup',register);
 
